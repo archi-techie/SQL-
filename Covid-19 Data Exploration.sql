@@ -158,3 +158,52 @@ Select *
 From PercentageVaccinatedPopulation
 
 
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+-------------------Data For Visualization
+
+--------1.
+
+SELECT SUM(new_cases) as total_cases, SUM(CAST(New_deaths as int)) as total_deaths, SUM(CAST(New_deaths as int))/SUM(new_cases) * 100 as PercentageDeath 
+FROM Portfolio..CovidDeaths
+--WHERE location = 'Nigeria'
+WHERE continent is NOT NULL
+--GROUP BY date
+ORDER BY 1,2
+
+
+--------2.
+
+-- We take these out as they are not inluded in the above queries and want to stay consistent
+-- European Union is part of Europe
+
+Select location, SUM(cast(new_deaths as int)) as TotalDeathCount
+From Portfolio..CovidDeaths
+--Where location = Nigeria'
+Where continent is null 
+and location not in ('World', 'European Union', 'International', 'High income', 'Upper middle income', 'Lower middle income', 'Low income' )
+Group by location
+order by TotalDeathCount desc
+
+
+-- 3.
+
+SELECT location, population, MAX(total_cases) as HighestInfectionCount, (MAX(total_cases/population)) * 100 as PercentageInfectedPopulation
+FROM Portfolio..CovidDeaths
+--WHERE location = 'Nigeria'
+WHERE continent is NOT NULL 
+GROUP BY location, population
+ORDER BY PercentageInfectedPopulation DESC
+
+
+-- 4.
+
+
+Select Location, Population,date, MAX(total_cases) as HighestInfectionCount,  Max((total_cases/population))*100 as PercentageInfectedPopulation
+From Portfolio..CovidDeaths
+--Where location like '%states%'
+Group by Location, Population, date
+order by PercentageInfectedPopulation desc
+vb 
+
